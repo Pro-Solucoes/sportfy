@@ -10,12 +10,12 @@ importar o react-router-dom
 
 importar o reactotron-react-js reactotron-redux reactotron-redux-saga 3.0.0
 
-### `Configuraçâo do Redux & Saga`
+## Configuraçâo do Redux & Saga
 
 Importe o `redux react-redux redux-saga`
 Crie o store/index.js, store/ducks/index.js e store/saga/index.js
 
-## store/index
+### `store/index`
 
 ```
 /* eslint-disable linebreak-style */
@@ -49,14 +49,14 @@ export default store;
 
 ```
 
-## 'App'
+### `App`
 
 ```
 import {Provider} from 'react-redux';
 import store from './store';
 ```
 
-## 'ducks/index'
+### `ducks/index`
 
 ```
 import { combineReducers } from 'redux';
@@ -66,7 +66,7 @@ export default combineReducers({
 });
 ```
 
-## 'sagas/index'
+### `sagas/index`
 
 ```
 import { all } from 'redux-saga/effects';
@@ -76,11 +76,11 @@ export default function* rootSaga() {
 }
 ```
 
-### Duck de Playlist
+## Duck de Playlist
 
 Crie o arquivo ducks/playlist.js
 
-## ducks/playlist.js
+### `ducks/playlist.js`
 
 ```
 export const Types = {
@@ -112,7 +112,7 @@ export const Creators = {
 
 Deve alterar o arquivo ducks/index para receber o redux
 
-# ´ducks/index´
+### `ducks/index`
 
 ```
 import { combineReducers } from 'redux';
