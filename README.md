@@ -1,17 +1,21 @@
-###`Estilizando o player`
+### `Estilizando o player`
+
 importar o rc-slider
 
-###`Estilizando pagina de navegaçao`
+### `Estilizando pagina de navegaçao`
+
 importar o react-router-dom
 
-###`Configurando o Reactotron`
+### `Configurando o Reactotron`
+
 importar o reactotron-react-js reactotron-redux reactotron-redux-saga 3.0.0
 
-###Configuraçâo do Redux & Saga
+### Configuraçâo do Redux & Saga
+
 Importe o `redux react-redux redux-saga`
 Crie o store/index.js, store/ducks/index.js e store/saga/index.js
 
-##store/index
+## store/index
 
 ```
 import { creacreStore, compose, applyMiddleware } from 'redux';
