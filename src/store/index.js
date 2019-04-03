@@ -1,19 +1,4 @@
-###`Estilizando o player`
-importar o rc-slider
-
-###`Estilizando pagina de navegaçao`
-importar o react-router-dom
-
-###`Configurando o Reactotron`
-importar o reactotron-react-js reactotron-redux reactotron-redux-saga 3.0.0
-
-###Configuraçâo do Redux & Saga
-Importe o `redux react-redux redux-saga`
-Crie o store/index.js, store/ducks/index.js e store/saga/index.js
-
-##store/index
-
-```
+/* eslint-disable linebreak-style */
 import { creacreStore, compose, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import sagas from './sagas';
@@ -28,4 +13,3 @@ const createAppropriateStore = process.env.NODE_ENV === 'development' ? console.
 const store = createAppropriateStore(reducers, compose(applyMiddleware(...middlewares)));
 sagaMiddleware.run(sagas);
 export default store;
-```
