@@ -80,7 +80,7 @@ export default function* rootSaga() {
 
 Crie o arquivo ducks/playlist.js
 
-# ducks/playlist.js
+## ducks/playlist.js
 
 ```
 export const Types = {
@@ -112,7 +112,7 @@ export const Creators = {
 
 Deve alterar o arquivo ducks/index para receber o redux
 
-## ´ducks/index'
+# ´ducks/index´
 
 ```
 import { combineReducers } from 'redux';
