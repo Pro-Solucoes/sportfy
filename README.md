@@ -122,3 +122,169 @@ export default combineReducers({
   playlists,
 });
 ```
+
+## Jason-serve
+
+Para iniciar deve importar `global add json-server`.
+Para iniciar o json `json-server server.json -p 3001 -w -d 500`
+
+## Carregando playlists na sidebar
+
+Para iniciar deve importar `axios` para requisições api
+
+### `services/api.js`
+
+```
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: 'http://localhost:3001',
+});
+export default api;
+
+```
+
+### `sagas/playlists.js`
+
+```
+import { call, put } from 'redux-saga/effects';
+import api from '../../services/api';
+
+import { Creators as PlaylitsActions } from '../ducks/playlists';
+
+export function* getPlaylists() {
+  try {
+    const response = yield call(api.get, '/playlists');
+    yield put(PlaylitsActions.getPlaylistsSuccess(response.data));
+  } catch (err) {
+    console.log(err);
+  }
+}
+```
+
+Altere o arquivo `saga/index`
+
+### `saga/index`
+
+```
+import { all, takeLatest } from 'redux-saga/effects';
+import { Types as PlaylistsTypes } from '../ducks/playlists';
+import { getPlaylists } from './playlist';
+
+export default function* rootSaga() {
+  yield all([takeLatest(PlaylistsTypes.GET_REQUEST, getPlaylists)]);
+}
+```
+
+## Carregando Playlist
+
+Deve alterar o arquivos `components/sidebar/index`
+
+```
+/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable linebreak-style */
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Creators as PlaylistsActions } from '../../store/ducks/playlists';
+
+import { Container, NewPlaylist, Nav } from './styles';
+import AddPlaylistIcon from '../../assets/images/add_playlist.svg';
+
+class Sidebar extends Component {
+  static propTypes = {
+    getPlayListRequest: PropTypes.func.isRequired,
+    playlists: PropTypes.shape({
+      data: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.number,
+          title: PropTypes.string,
+        }),
+      ),
+    }).isRequired,
+  };
+
+  componentDidMount() {
+    this.props.getPlaylistsRequest();
+  }
+
+  render() {
+    return (
+      <Container>
+        <div>
+          <Nav main>
+            <li>
+              <a href="">Navegar</a>
+            </li>
+            <li>
+              <a href="">Radio</a>
+            </li>
+          </Nav>
+          <Nav>
+            <li>
+              <span>SUA BIBLIOTECA</span>
+            </li>
+            <li>
+              <a href="">Seu Daily Mix</a>
+            </li>
+            <li>
+              <a href="">Tocados recentemantes</a>
+            </li>
+            <li>
+              <a href="">Musicas</a>
+            </li>
+            <li>
+              <a href="">Albums</a>
+            </li>
+            <li>
+              <a href="">Artistas</a>
+            </li>
+            <li>
+              <a href="">Estações</a>
+            </li>
+            <li>
+              <a href="">Arquivos locais</a>
+            </li>
+            <li>
+              <a href="">Videos</a>
+            </li>
+            <li>
+              <a href="">Podcasts</a>
+            </li>
+          </Nav>
+          <Nav>
+            <li>
+              <span>PLAYLISTS</span>
+            </li>
+            {this.props.playlists.data.map(playlist => (
+              <li key={playlist.id}>
+                <Link to={`playlists/${playlist.id}`}>{playlist.title}</Link>
+              </li>
+            ))}
+          </Nav>
+        </div>
+        <NewPlaylist>
+          <img src={AddPlaylistIcon} alt="Adiconar Playlist" />
+          Nova Playlist
+        </NewPlaylist>
+      </Container>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  playlists: state.playlists,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(PlaylistsActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Sidebar);
+
+```
