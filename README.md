@@ -218,7 +218,7 @@ class Sidebar extends Component {
         <div>
           <Nav main>
             <li>
-              <a href="">Navegar</a>
+              <Link to="/">Navegar</Link>
             </li>
             <li>
               <a href="">Radio</a>
@@ -288,3 +288,160 @@ export default connect(
 )(Sidebar);
 
 ```
+
+## Mostrando Playlist na home
+
+`pages/browse/index.js`
+
+```
+/* eslint-disable linebreak-style */
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+import { Creators as PlaylistsActions } from '../../store/ducks/playlists';
+import {
+  Container, Title, List, Playlist,
+} from './styles';
+
+class Browse extends Component {
+  static propTypes = {
+    getPlayListRequest: PropTypes.func.isRequired,
+    playlists: PropTypes.shape({
+      data: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.number,
+          title: PropTypes.string,
+          thumbnail: PropTypes.string,
+          description: PropTypes.string,
+        }),
+      ),
+    }).isRequired,
+  };
+
+  componentDidMount() {
+    this.props.getPlaylistsRequest();
+  }
+
+  render() {
+    return (
+      <Container>
+        <Title>Navegar</Title>
+        <List>
+          {this.props.playlists.data.map(playlist => (
+            <Playlist key={playlist.id} to={`/playlists/${playlist.id}`}>
+              <img src={playlist.thumbnail} alt={playlist.title} />
+              <strong>{playlist.title}</strong>
+              <p>{playlist.description}</p>
+            </Playlist>
+          ))}
+        </List>
+      </Container>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  playlists: state.playlists,
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators(PlaylistsActions, dispatch);
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Browse);
+
+```
+
+## Adicionando loading
+
+`components/loading/index`
+
+```
+import React from 'react';
+import LoadingIcon from '../../assets/images/loading.svg';
+import { Spinner } from './styles';
+
+const Loading = () => <Spinner src={LoadingIcon} alt="Carregando" />;
+
+export default Loading;
+
+```
+
+`browse/styler`
+
+```
+import styled, { keyframes } from 'styled-components';
+
+const rotate360 = keyframes`
+from{
+transform:rotate(0deg)
+}
+to{
+  transform:rotate(360deg)
+}
+`;
+
+export const Spinner = styled.img`
+  animation: ${rotate360} 2s linear infinite;
+`;
+
+```
+
+`siderbar/index`
+
+```
+import Loading from '../Loading';
+...
+),
+      loading: PropTypes.bool,
+...
+     <span>PLAYLISTS</span>
+              {this.props.playlists.Loading && <Loading />}
+```
+
+`siderbar/styler`
+
+```
+import { Spinner } from '../Loading/styles';
+...
+export const Nav = styled.ul`
+ li {
+      display:flex;
+    align-items:center;
+  ${Spinner}{
+      height:15px;
+      margin-left:5px;
+    }
+
+```
+
+`brower/index`
+
+```
+import Loading from '../Loading';
+...
+),
+      loading: PropTypes.bool,
+...
+      <Title>
+          Navegar
+          {this.props.playlists.loading && <Loading />}
+```
+
+`browse/styler`
+
+```
+import { Spinner } from '../Loading/styles';
+...
+export const Title = styled.h1`
+  font-size: 48px;
+
+  ${Spinner} {
+    height: 24px;
+  }
+
+```
+
+## Detalhe da playlist
