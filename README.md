@@ -445,3 +445,71 @@ export const Title = styled.h1`
 ```
 
 ## Detalhe da playlist
+
+`store/ducks/playlistDetails`
+
+```
+/* eslint-disable linebreak-style */
+export const Types = {
+  GET_REQUEST: 'playlistDetails/GET_REQUEST',
+  GET_SUCCESS: 'playlistDetails/GET_SUCCESS',
+};
+
+const INITIAL_STATE = {
+  data: {},
+  loading: false,
+};
+
+export default function playlistDetails(state = INITIAL_STATE, action) {
+  switch (action.type) {
+    case Types.GET_REQUEST:
+      return { ...state, loading: true };
+    case Types.GET_SUCCESS:
+      return { ...state, loading: false, data: action.payload.data };
+    default:
+      return state;
+  }
+}
+
+export const Creators = {
+  getplaylistDetailsRequest: id => ({ type: Types.GET_REQUEST, payload: { id } }),
+  getplaylistDetailsSuccess: data => ({ type: Types.GET_SUCCESS, payload: { data } }),
+};
+
+```
+
+`store/ducks/index`
+
+```
+import playlistDetails from './playlistDetails';
+...
+playlistDetails,
+```
+
+`store/sagas/playlistDetails`
+
+```
+import { call, put } from 'redux-saga/effects';
+import api from '../../services/api';
+
+import { Creators as PlaylitDetailsActions } from '../ducks/playlists';
+
+export function* getPlaylistDetails(action) {
+  try {
+    const response = yield call(api.get, `/playlists/${action.playload.id}?_embed=songs`);
+
+    yield put(PlaylitDetailsActions.getPlaylistDetailsSuccess(response.data));
+  } catch (err) {
+    console.log(err);
+  }
+}
+```
+
+`store/sagas/index`
+
+```
+import { Types as PlaylistDetailsTypes } from '../ducks/playlistDetails';
+import { getPlaylistDetails } from './playlistDetails';
+...
+    takeLatest(PlaylistDetailsTypes.GET_REQUEST, getPlaylistDetails),
+```
