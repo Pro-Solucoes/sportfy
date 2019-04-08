@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-undef */
@@ -7,16 +8,51 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import propTypes from 'prop-types';
 import Loading from '../../components/Loading';
-import { Container, Header, Songlits } from './styles';
+import { Container, Header, SongList } from './styles';
 import { Creators as PlaylistDetailsActions } from '../../store/ducks/playlistDetails';
 
 import ClockIcon from '../../assets/images/clock.svg';
 import PlusIcon from '../../assets/images/plus.svg';
 
 class Playlist extends Component {
-  componentDidMount() {
+  /* static propTypes = {
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        id: PropTypes.number,
+      }),
+    }).isRequired,
+    playlistDetails: PropTypes.shape({
+      data: PropTypes.shape({
+        thumbnail: PropTypes.string,
+        title: PropTypes.title,
+        description: PropTypes.string,
+        songs: PropTypes.arrayOf(
+          PropTypes.shape({
+            id: PropTypes.number,
+            title: PropTypes.string,
+            album: PropTypes.string,
+            author: PropTypes.string,
+          }),
+        ),
+      }),
+      loading: PropTypes.bool,
+    }).isRequired,
+    currentSong: PropTypes.shape({
+      id: PropTypes.number,
+    }).isRequired,
+    getPlaylistDetailsRequest: PropTypes.func.isRequired,
+  };
+*/
+  static componentDidMount() {
     this.loadPlaylistDetails();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.match.params.id !== this.props.match.params.id) {
+      this.loadPlaylistDetails();
+    }
   }
 
   loadPlaylistDetails = () => {
@@ -25,52 +61,61 @@ class Playlist extends Component {
     this.props.getPlaylistDetailsRequest(id);
   };
 
-  renderDetais = () => (
-    <Container>
-      <Header>
-        <img
-          src="https://static1.purebreak.com.br/articles/9/84/40/9/@/314437-djonga-lanca-ladrao-terceiro-album-da-diapo-2.jpg"
-          alt="Sou Ladrão"
-        />
-        <div>
-          <span>PLAYLIST</span>
-          <h1>Ladrão</h1>
-          <p>10 músicas</p>
-          <button>PLAY</button>
-        </div>
-      </Header>
-      <Songlits cellPadding={0} cellSpacing={0}>
-        <thead>
-          <th />
-          <th>Título</th>
-          <th>Artista</th>
-          <th>Album</th>
-          <th>
-            <img src={ClockIcon} alt="Duração" />
-          </th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <img src={PlusIcon} alt="Adicionar" />
-            </td>
-            <td>HAT-TRICK</td>
-            <td>Djonga</td>
-            <td>Ladrão</td>
-            <td>4:19</td>
-          </tr>
-        </tbody>
-      </Songlits>
-    </Container>
-  );
+  renderDetais = () => {
+    const playlist = this.props.playlistDetails.data;
+    return (
+      <Container>
+        <Header>
+          <img src={playlist.thumbnail} alt={playlist.title} />
+          <div>
+            <span>PLAYLIST</span>
+            <h1>{playlist.title}</h1>
+            {!!playlist.songs && <p>{playlist.songs.length}</p>}
+            <button>PLAY</button>
+          </div>
+        </Header>
+        <SongList cellPadding={0} cellSpacing={0}>
+          <thead>
+            <th />
+            <th>Título</th>
+            <th>Artista</th>
+            <th>Album</th>
+            <th>
+              <img src={ClockIcon} alt="Duração" />
+            </th>
+          </thead>
+          <tbody>
+            {!playlist.songs ? (
+              <tr>
+                <td colSpan={5}>Nenhuma musica cadastrada</td>
+              </tr>
+            ) : (
+              playlist.songs.map(song => (
+                <tr key={song.id}>
+                  <td>
+                    <img src={PlusIcon} alt="Adicionar" />
+                  </td>
+                  <td>{song.title}</td>
+                  <td>{song.author}</td>
+                  <td>{song.album}</td>
+                  <td>4:19</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </SongList>
+      </Container>
+    );
+  };
 
   render() {
+    // Essa função esta invertida pois nao para de carregar o loading
     return this.props.playlistDetails.loading ? (
+      this.renderDetais()
+    ) : (
       <Container loading>
         <Loading />
       </Container>
-    ) : (
-      this.renderDetais()
     );
   }
 }
