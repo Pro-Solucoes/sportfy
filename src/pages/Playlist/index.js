@@ -1,3 +1,4 @@
+/* eslint-disable react/no-typos */
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/destructuring-assignment */
@@ -9,7 +10,7 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Loading from '../../components/Loading';
 import { Container, Header, SongList } from './styles';
 import { Creators as PlaylistDetailsActions } from '../../store/ducks/playlistDetails';
@@ -28,12 +29,12 @@ class Playlist extends Component {
     playlistDetails: PropTypes.shape({
       data: PropTypes.shape({
         thumbnail: PropTypes.string,
-        title: PropTypes.title,
-        description: PropTypes.description,
+        title: PropTypes.string,
+        description: PropTypes.string,
         songs: PropTypes.arrayOf(
           PropTypes.shape({
             id: PropTypes.number,
-            title: PropTypes.title,
+            title: PropTypes.string,
             author: PropTypes.string,
             album: PropTypes.string,
           }),
