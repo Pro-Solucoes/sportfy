@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
@@ -17,34 +18,31 @@ import ClockIcon from '../../assets/images/clock.svg';
 import PlusIcon from '../../assets/images/plus.svg';
 
 class Playlist extends Component {
-  /* static propTypes = {
+  static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
         id: PropTypes.number,
       }),
     }).isRequired,
+    getPlaylistDetailsRequest: PropTypes.func.isRequired,
     playlistDetails: PropTypes.shape({
       data: PropTypes.shape({
         thumbnail: PropTypes.string,
         title: PropTypes.title,
-        description: PropTypes.string,
+        description: PropTypes.description,
         songs: PropTypes.arrayOf(
           PropTypes.shape({
             id: PropTypes.number,
-            title: PropTypes.string,
-            album: PropTypes.string,
+            title: PropTypes.title,
             author: PropTypes.string,
+            album: PropTypes.string,
           }),
         ),
       }),
       loading: PropTypes.bool,
     }).isRequired,
-    currentSong: PropTypes.shape({
-      id: PropTypes.number,
-    }).isRequired,
-    getPlaylistDetailsRequest: PropTypes.func.isRequired,
   };
-*/
+
   static componentDidMount() {
     this.loadPlaylistDetails();
   }
@@ -70,7 +68,12 @@ class Playlist extends Component {
           <div>
             <span>PLAYLIST</span>
             <h1>{playlist.title}</h1>
-            {!!playlist.songs && <p>{playlist.songs.length}</p>}
+            {!!playlist.songs && (
+              <p>
+                {playlist.songs.length}
+                Musicas
+              </p>
+            )}
             <button>PLAY</button>
           </div>
         </Header>
@@ -109,13 +112,12 @@ class Playlist extends Component {
   };
 
   render() {
-    // Essa função esta invertida pois nao para de carregar o loading
     return this.props.playlistDetails.loading ? (
-      this.renderDetais()
-    ) : (
       <Container loading>
         <Loading />
       </Container>
+    ) : (
+      this.renderDetais()
     );
   }
 }
