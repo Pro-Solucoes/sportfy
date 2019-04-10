@@ -1,3 +1,6 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/no-unused-prop-types */
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable linebreak-style */
 import React, { Component } from 'react';

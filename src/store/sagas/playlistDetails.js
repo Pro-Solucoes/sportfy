@@ -6,7 +6,7 @@ import { Creators as PlaylitDetailsActions } from '../ducks/playlistDetails';
 
 export function* getPlaylistDetails(action) {
   try {
-    const response = yield call(api.get, `/playlists/${action.playload.id}?_embed=songs`);
+    const response = yield call(api.get, `/playlists/${action.payload.id}?_embed=songs`);
 
     yield put(PlaylitDetailsActions.getPlaylistDetailsSuccess(response.data));
   } catch (err) {
