@@ -3,6 +3,9 @@
 /* eslint-disable linebreak-style */
 import React from 'react';
 import Slider from 'rc-slider';
+import Sound from 'react-sound';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   Container, Current, Volume, Progress, Controls, ProgressSlider, Time,
 } from './styles';
@@ -16,6 +19,7 @@ import RepeatIcon from '../../assets/images/repeat.svg';
 
 const Player = () => (
   <Container>
+    {!!player.currentSong && <Sound url={player.currentSong.file} playStatus={player.status} />}
     <Current>
       <img
         src="https://static1.purebreak.com.br/articles/9/84/40/9/@/314437-djonga-lanca-ladrao-terceiro-album-da-diapo-2.jpg"
@@ -71,4 +75,7 @@ const Player = () => (
   </Container>
 );
 
-export default Player;
+const mapStateToProps = state => ({
+  player: state.player,
+});
+export default connect(mapStateToProps)(Player);

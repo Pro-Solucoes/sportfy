@@ -496,7 +496,7 @@ import { Creators as PlaylitDetailsActions } from '../ducks/playlists';
 
 export function* getPlaylistDetails(action) {
   try {
-    const response = yield call(api.get, `/playlists/${action.playload.id}?_embed=songs`);
+    const response = yield call(api.get, `/playlists/${action.payload.id}?_embed=songs`);
 
     yield put(PlaylitDetailsActions.getPlaylistDetailsSuccess(response.data));
   } catch (err) {
@@ -512,4 +512,51 @@ import { Types as PlaylistDetailsTypes } from '../ducks/playlistDetails';
 import { getPlaylistDetails } from './playlistDetails';
 ...
     takeLatest(PlaylistDetailsTypes.GET_REQUEST, getPlaylistDetails),
+```
+
+## Lidando com erros
+
+Primeiro deve criar o duck `error`
+
+adicionar o import no `store/ducks/index`
+
+```
+import error from './error';
+...
+export default combineReducers({
+error,
+```
+
+para exibir deve ser importado nos sagas o seguinte trecho
+
+```
+import { Creators as ErrorActions } from '../ducks/error';
+...
+catch (err) {
+    yield put(ErrorActions.setError('Não foi possivel obter os detalhes da playlist'));
+  }
+```
+
+Criar o componente `ErrorBox`
+
+## Tocando a música
+
+Para começar deve importar o `react-sound`
+
+dentro do componente `player`
+
+```
+import Sound from 'react-sound';
+```
+
+criar um ducks `player`
+
+dentro da pages em `Plaulist`
+
+```
+import { Creators as PlayerActions } from '../../store/ducks/player';
+...
+ <tr key={song.id} onDoubleClick={() => this.props.loadSong(song)}>
+...
+const mapDispatchToProps = dispatch => bindActionCreators({ ...PlaylistDetailsActions, ...PlayerActions }, dispatch);
 ```
